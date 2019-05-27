@@ -1,0 +1,54 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.tbd.twitter.TwitterProperties",
+      "name": "",
+      "type": "com.tbd.twitter.TwitterProperties"
+    },
+    {
+      "sourceType": "com.tbd.twitter.TwitterProperties",
+      "name": "mongo",
+      "sourceMethod": "public com.tbd.twitter.TwitterProperties.Mongo getMongo() ",
+      "type": "com.tbd.twitter.TwitterProperties$Mongo"
+    },
+    {
+      "sourceType": "com.tbd.twitter.TwitterProperties",
+      "name": "twitter",
+      "sourceMethod": "public com.tbd.twitter.TwitterProperties.Twitter getTwitter() ",
+      "type": "com.tbd.twitter.TwitterProperties$Twitter"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.tbd.twitter.TwitterProperties$Mongo",
+      "name": "mongo.database",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.tbd.twitter.TwitterProperties$Mongo",
+      "name": "mongo.host",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.tbd.twitter.TwitterProperties$Twitter",
+      "name": "twitter.access-token",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.tbd.twitter.TwitterProperties$Twitter",
+      "name": "twitter.access-token-secret",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.tbd.twitter.TwitterProperties$Twitter",
+      "name": "twitter.consumer-key",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.tbd.twitter.TwitterProperties$Twitter",
+      "name": "twitter.consumer-secret",
+      "type": "java.lang.String"
+    }
+  ]
+}
