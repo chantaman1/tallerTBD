@@ -26,7 +26,7 @@ public class Location implements Serializable{
     private List<ArtistEstadistic> artist_estadistic;
 
     //One artist has many estadistics.
-    @OneToMany(targetEntity = MusicalGenreStadistic.class, mappedBy = "musical_genre_stadistic", cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = StatsMusicalGenre.class, mappedBy = "statsMusicalGenre", cascade = CascadeType.ALL)
     @JsonManagedReference("location-musical_genre_estadistic")
     private List<ArtistEstadistic> musical_genre_estadistic;
 }
