@@ -1,0 +1,8 @@
+ rock
+ pop
+ hip hop
+ jazz
+ electronica
+ reggae
+ funk soul
+ 
