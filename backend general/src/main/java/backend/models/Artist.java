@@ -2,6 +2,7 @@ package java.backend.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;

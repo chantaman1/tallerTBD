@@ -2,6 +2,7 @@ package java.backend.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;
@@ -17,8 +18,11 @@ public class Location implements Serializable{
     @Column(name = "location_id", nullable = false)
     private Integer locationId;
 
-	@Column(name = "location_name", nullable = false)
-	private String location_name;
+	@Column(name = "city_name", nullable = false)
+	private String city_name;
+
+    @Column(name = "country_name", nullable = false)
+    private String country_name;
 
 	//One artist has many keywords.
     @OneToMany(targetEntity = ArtistEstadistic.class, mappedBy = "artist_estadistic", cascade = CascadeType.ALL)

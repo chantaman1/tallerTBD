@@ -1,11 +1,11 @@
-package backend.models;
+package java.backend.models;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.sun.tools.javac.util.List;
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 @Entity
@@ -28,7 +28,7 @@ public class Keywords {
 
     //Muchas palabras clave pertenecen a un artista
     @ManyToOne
-    @JoinColumn(name="keyword_id")
+    @JoinColumn(name="artist_id")
     @JsonBackReference("keyword-artist")
     private Artist artist;
 

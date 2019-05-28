@@ -1,8 +1,8 @@
-package backend.models;
+package java.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
