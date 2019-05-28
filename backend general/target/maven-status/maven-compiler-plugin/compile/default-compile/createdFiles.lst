@@ -1,0 +1,7 @@
+java/backend/models/MusicalGenreStadistic.class
+java/backend/models/Keywords.class
+java/backend/models/Location.class
+java/backend/models/MusicalGenre.class
+java/backend/models/Artist.class
+java/backend/models/ArtistEstadistic.class
+java/backend/models/StatsMusicalGenre.class
