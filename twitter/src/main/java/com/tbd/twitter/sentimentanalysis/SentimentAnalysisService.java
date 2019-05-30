@@ -2,17 +2,14 @@ package com.tbd.twitter.sentimentanalysis;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 
-@RestController
-public class SentimentAnalysisController {
+@Component
+public class SentimentAnalysisService {
 	@Autowired
 	private Classifier classifier;
 
-	@RequestMapping("/classify")
-    public HashMap<String,Double> classify(@RequestParam(value="text") String text) {
+    public HashMap<String,Double> classify(String text) {
         return this.classifier.classify(text);
     }
 	public Classifier getClassifier() {
