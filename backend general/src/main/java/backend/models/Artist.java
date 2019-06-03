@@ -30,4 +30,5 @@ public class Artist implements Serializable{
     @OneToMany(targetEntity = ArtistEstadistic.class, mappedBy = "artist_estadistic", cascade = CascadeType.ALL)
     @JsonManagedReference("artist-artist_estadistic")
     private List<ArtistEstadistic> artist_estadistic;
+
 }
