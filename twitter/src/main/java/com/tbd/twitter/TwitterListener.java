@@ -17,9 +17,6 @@ import twitter4j.StatusListener;
 import twitter4j.TwitterStream;
 import org.springframework.core.io.ResourceLoader;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -33,8 +30,6 @@ public class TwitterListener {
 	private TweetService tweetService;
 	@Autowired
 	private SentimentAnalysisService sentimentAnalysisService;
-
-	ZoneId defaultZoneId = ZoneId.systemDefault();
 
 	@PostConstruct
 	public void run() {
