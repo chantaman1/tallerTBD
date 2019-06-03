@@ -31,6 +31,8 @@ public class TwitterListener {
 	@Autowired
 	private SentimentAnalysisService sentimentAnalysisService;
 
+	int tweetsCount = 0;
+
 	@PostConstruct
 	public void run() {
 		twitterStream.addListener(new StatusListener() {
@@ -70,7 +72,9 @@ public class TwitterListener {
 						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude(), status.getPlace().getName(), status.getPlace().getCountry(), status.getUser().getId(), status.getUser().getName(), "negative");
 					}
 				}
-				System.out.println("Tweet recibido.");
+				tweetsCount++;
+				System.out.print("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
+				System.out.print("Total Tweets: " + tweetsCount);
 			}
 
 			@Override
