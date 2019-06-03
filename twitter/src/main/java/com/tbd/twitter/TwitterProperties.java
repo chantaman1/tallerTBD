@@ -5,24 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties
 public class TwitterProperties {
 	private Twitter twitter=new Twitter();
-	private Mongo mongo=new Mongo();
-	
-	public class Mongo{
-		public String getHost() {
-			return host;
-		}
-		public void setHost(String host) {
-			this.host = host;
-		}
-		public String getDatabase() {
-			return database;
-		}
-		public void setDatabase(String database) {
-			this.database = database;
-		}
-		private String host;
-		private String database;
-	}
 	
 	public class Twitter{
 		private String consumerKey;
@@ -62,13 +44,5 @@ public class TwitterProperties {
 
 	public void setTwitter(Twitter twitter) {
 		this.twitter = twitter;
-	}
-
-	public Mongo getMongo() {
-		return mongo;
-	}
-
-	public void setMongo(Mongo mongo) {
-		this.mongo = mongo;
 	}
 }
