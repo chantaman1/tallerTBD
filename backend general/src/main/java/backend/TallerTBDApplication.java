@@ -10,16 +10,19 @@ public class TallerTBDApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TallerTBDApplication.class, args);
-		/*MongoConnection mongo = MongoConnection.getMongo();
-		mongo.OpenMongoClient();
-		DBCursor cursor = mongo.getTweets();
-		System.out.println(cursor);
-		while (cursor.hasNext()) {
-			DBObject cur = cursor.next();
-			//String texto = cur.get("text");
-			System.out.println(cur.get("text"));
-		}
-		cursor.close();*/
+		// MongoConnection mongo = MongoConnection.getMongo();
+		// mongo.OpenMongoClient();
+		// DBCursor cursor = mongo.getTweets();
+		// System.out.println(cursor);
+		// while (cursor.hasNext()) {
+		// 	DBObject cur = cursor.next();
+		// 	//String texto = cur.get("text");
+		// 	System.out.println(cur.get("text"));
+		// }
+		// cursor.close();
+
+		Elastic e = new Elastic();
+		e.indexCreate();
 	}
 
 }
