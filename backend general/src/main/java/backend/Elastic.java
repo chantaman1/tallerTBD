@@ -58,8 +58,10 @@ public class Elastic{
             DBCursor cursor = mongo.getTweets();
             Document doc = null;
             Document user = null;
+            int amountOfTweets = 0;
 
             while (cursor.hasNext()) {
+                amountOfTweets++;
                 DBObject cur = cursor.next();
                 doc = new Document();
                 Date date = (Date) cur.get("createdAt");
@@ -89,12 +91,35 @@ public class Elastic{
                     // System.out.println(doc);
                 }
             }
+            System.out.println("Cantidad de tweets: " + amountOfTweets);
             cursor.close();
             writer.close();
         } catch (IOException ioe) {
             System.out.println(" Error en " + ioe.getClass() + "\n mensaje: " + ioe.getMessage());
         }
     }
+
+    public int getQuantity(String genre){
+            int total = 0;
+
+            try {
+                IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get("indice/")));
+                IndexSearcher searcher = new IndexSearcher(reader);
+                Analyzer analyzer = new StandardAnalyzer();
+                QueryParser parser = new QueryParser("text", analyzer);
+                Query query = parser.parse(genre);
+                TopDocs result = searcher.search(query, 25000);
+                ScoreDoc[] hits = result.scoreDocs;
+
+                total = hits.length;
+
+                reader.close();
+            } catch(IOException | ParseException ex) {
+                Logger.getLogger(Elastic.class.getName()).log(Level.SEVERE,null,ex);
+            }
+
+            return total;
+        }
 }
 
 

@@ -23,6 +23,7 @@ public class TallerTBDApplication {
 
 		Elastic e = new Elastic();
 		e.indexCreate();
+		System.out.println("Cantidad de tweets referentes al rock: " + e.getQuantity("rock"));
 	}
 
 }
