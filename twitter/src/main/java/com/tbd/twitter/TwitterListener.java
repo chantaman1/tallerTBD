@@ -37,39 +37,40 @@ public class TwitterListener {
 	public void run() {
 		twitterStream.addListener(new StatusListener() {
 			public void onStatus(Status status) {
+				int followers = status.getUser().getFollowersCount();
 				HashMap<String, Double> result = sentimentAnalysisService.classify(status.getText());
 				double negative = result.get("negative");
 				double positive = result.get("positive");
 				if(status.getPlace() == null && status.getGeoLocation() == null) {
 					if(positive > negative) {
-						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), 0, 0, "", "", status.getUser().getId(), status.getUser().getName(), "positive");
+						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), 0, 0, "", "", status.getUser().getId(), status.getUser().getName(), status.getUser().getFollowersCount(), "positive");
 					}
 					else {
-						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), 0, 0, "", "", status.getUser().getId(), status.getUser().getName(), "negative");
+						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), 0, 0, "", "", status.getUser().getId(), status.getUser().getName(), status.getUser().getFollowersCount(), "negative");
 					}
 				}
 				else if(status.getPlace() == null && status.getGeoLocation() != null) {
 					if(positive > negative){
-						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude(), "", "", status.getUser().getId(), status.getUser().getName(), "positive");
+						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude(), "", "", status.getUser().getId(), status.getUser().getName(), status.getUser().getFollowersCount(), "positive");
 					}
 					else{
-						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude(), "", "", status.getUser().getId(), status.getUser().getName(), "negative");
+						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude(), "", "", status.getUser().getId(), status.getUser().getName(), status.getUser().getFollowersCount(), "negative");
 					}
 				}
 				else if(status.getPlace() != null && status.getGeoLocation() == null) {
 					if(positive > negative){
-						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), 0, 0, status.getPlace().getName(), status.getPlace().getCountry(), status.getUser().getId(), status.getUser().getName(), "positive");
+						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), 0, 0, status.getPlace().getName(), status.getPlace().getCountry(), status.getUser().getId(), status.getUser().getName(), status.getUser().getFollowersCount(), "positive");
 					}
 					else{
-						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), 0, 0, status.getPlace().getName(), status.getPlace().getCountry(), status.getUser().getId(), status.getUser().getName(), "negative");
+						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), 0, 0, status.getPlace().getName(), status.getPlace().getCountry(), status.getUser().getId(), status.getUser().getName(), status.getUser().getFollowersCount(), "negative");
 					}
 				}
 				else {
 					if(positive > negative){
-						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude(), status.getPlace().getName(), status.getPlace().getCountry(), status.getUser().getId(), status.getUser().getName(), "positive");
+						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude(), status.getPlace().getName(), status.getPlace().getCountry(), status.getUser().getId(), status.getUser().getName(), status.getUser().getFollowersCount(), "positive");
 					}
 					else{
-						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude(), status.getPlace().getName(), status.getPlace().getCountry(), status.getUser().getId(), status.getUser().getName(), "negative");
+						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude(), status.getPlace().getName(), status.getPlace().getCountry(), status.getUser().getId(), status.getUser().getName(), status.getUser().getFollowersCount(), "negative");
 					}
 				}
 				tweetsCount++;

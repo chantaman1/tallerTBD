@@ -18,9 +18,10 @@ public class Tweet {
 	public String country;
 	public long userId;
 	public String userName;
+	public int followersCount;
 	public String sentimentAnalysis;
 	
-	public Tweet(long tweetId, String text, Date createdAt, double latitude, double longitude, String city, String country, long userId, String userName, String sentimentAnalysis) {
+	public Tweet(long tweetId, String text, Date createdAt, double latitude, double longitude, String city, String country, long userId, String userName, int followersCount, String sentimentAnalysis) {
 		this.tweetId = tweetId;
 		this.text = text;
 		this.createdAt = createdAt;
@@ -30,6 +31,7 @@ public class Tweet {
 		this.country = country;
 		this.userId = userId;
 		this.userName = userName;
+		this.followersCount = followersCount;
 		this.sentimentAnalysis = sentimentAnalysis;
 	}
 
@@ -111,6 +113,14 @@ public class Tweet {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public int getFollowersCount() {
+		return followersCount;
+	}
+
+	public void setFollowersCount(int followersCount) {
+		this.followersCount = followersCount;
 	}
 
 	public String getSentimentAnalysis() {
