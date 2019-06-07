@@ -18,10 +18,11 @@ public class TallerTBDApplication {
 		SpringApplication.run(TallerTBDApplication.class, args);
 
 		Elastic e = new Elastic();
-		e.indexCreate();
+		//e.indexCreate();
 		System.out.println("Index creado, iniciando conteo de items...");
-		e.countAllByKeywords();
-		e.countAllSentiments();
+		e.countAllKeywordAndSentiments();
+		//e.countAllByKeywords();
+		//e.countAllSentiments();
 		System.out.println("Fin.");
 	}
 

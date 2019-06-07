@@ -13,6 +13,7 @@ public class ListaPalabraService {
     ListaPalabraRepository listaPalabraRepository;
 
     public List<ListaPalabra> getAllPalabras(){
+        System.out.println("ok");
         return listaPalabraRepository.findAll();
     }
 

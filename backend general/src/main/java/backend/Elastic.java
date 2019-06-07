@@ -35,9 +35,11 @@ import org.apache.lucene.store.FSDirectory;
 import org.elasticsearch.search.DocValueFormat;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.print.Doc;
 
+@Component
 public class Elastic{
     private ArrayList<Integer> resultList;
     private int positiveResult;
@@ -144,6 +146,41 @@ public class Elastic{
         }
 
         return total;
+    }
+
+    private int getGenreAndSentiment(String sentiment, String genre){
+        int total = 0;
+
+        try {
+            IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get("indice/")));
+            IndexSearcher searcher = new IndexSearcher(reader);
+            Analyzer analyzer = new StandardAnalyzer();
+            QueryParser parser = new QueryParser("<default field>", analyzer);
+            String special = "text:" + genre + " AND sentimentAnalysis:" + sentiment;
+            TopDocs result = searcher.search(parser.parse(special), 100000);
+            ScoreDoc[] hits = result.scoreDocs;
+            total = hits.length;
+
+            reader.close();
+        } catch(IOException | ParseException ex) {
+            Logger.getLogger(Elastic.class.getName()).log(Level.SEVERE,null,ex);
+        }
+
+        return total;
+    }
+
+    public void countAllKeywordAndSentiments(){
+        //List<ListaPalabra> palabras = listaPalabraService.getAllPalabras();
+        List<String> palabras = new ArrayList<>();
+        palabras.add("rock");
+        palabras.add("pop");
+        palabras.add("metal");
+        palabras.add("reggaeton");
+        for(String palabra : palabras){
+            int totalPositivo = getGenreAndSentiment("positive", palabra);
+            int totalNegativo = getGenreAndSentiment("negative", palabra);
+            System.out.println("Genero: " + palabra + " Total Positivos: " + totalPositivo + " Total negativos: " + totalNegativo);
+        }
     }
 
     public void countAllByKeywords(){
