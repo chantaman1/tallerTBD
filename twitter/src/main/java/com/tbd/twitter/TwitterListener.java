@@ -1,9 +1,11 @@
 package com.tbd.twitter;
 
 import javax.annotation.PostConstruct;
+
+import com.tbd.twitter.Models.ListaPalabra;
+import com.tbd.twitter.Service.ListaPalabraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import com.tbd.twitter.Service.TweetService;
@@ -16,7 +18,6 @@ import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
 import twitter4j.TwitterStream;
 import org.springframework.core.io.ResourceLoader;
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -30,14 +31,18 @@ public class TwitterListener {
 	private TweetService tweetService;
 	@Autowired
 	private SentimentAnalysisService sentimentAnalysisService;
-
-	int tweetsCount = 0;
+	@Autowired
+	private ListaPalabraService listaPalabraService;
 
 	@PostConstruct
 	public void run() {
 		twitterStream.addListener(new StatusListener() {
 			public void onStatus(Status status) {
-				int followers = status.getUser().getFollowersCount();
+				/*String userLocation = status.getUser().getLocation();
+				int isFromChile = userLocation.indexOf("chile");
+				if(isFromChile > 0){
+
+				}*/
 				HashMap<String, Double> result = sentimentAnalysisService.classify(status.getText());
 				double negative = result.get("negative");
 				double positive = result.get("positive");
@@ -73,9 +78,7 @@ public class TwitterListener {
 						tweetService.create(status.getId(), status.getText(), status.getCreatedAt(), status.getGeoLocation().getLatitude(), status.getGeoLocation().getLongitude(), status.getPlace().getName(), status.getPlace().getCountry(), status.getUser().getId(), status.getUser().getName(), status.getUser().getFollowersCount(), "negative");
 					}
 				}
-				tweetsCount++;
-				System.out.print("\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b");
-				System.out.print("Total Tweets: " + tweetsCount);
+				System.out.println("Tweet almacenado.");
 			}
 
 			@Override
@@ -99,18 +102,12 @@ public class TwitterListener {
 			}
 		});
 		String[] bow=null;
-		try {
-			Resource resource=resourceLoader.getResource("classpath:bagofwords.txt");
-			Scanner sc=new Scanner(resource.getFile());
-			List<String> lines=new ArrayList<String>();
-			while (sc.hasNextLine()) {
-			  lines.add(sc.nextLine());
-			}
-			bow=lines.toArray(new String[0]);
-			sc.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		List<ListaPalabra> palabras = listaPalabraService.getAllPalabras();
+		List<String> lines=new ArrayList<String>();
+		for(ListaPalabra palabra : palabras){
+			lines.add(palabra.getPalabra());
 		}
+		bow=lines.toArray(new String[0]);
 
 		FilterQuery filter = new FilterQuery();
 		filter.track(bow);

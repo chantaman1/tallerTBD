@@ -1,8 +1,14 @@
 package backend;
+import backend.models.ListaPalabra;
+import backend.services.ListaPalabraService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import com.mongodb.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 @EnableScheduling
@@ -10,20 +16,13 @@ public class TallerTBDApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TallerTBDApplication.class, args);
-		// MongoConnection mongo = MongoConnection.getMongo();
-		// mongo.OpenMongoClient();
-		// DBCursor cursor = mongo.getTweets();
-		// System.out.println(cursor);
-		// while (cursor.hasNext()) {
-		// 	DBObject cur = cursor.next();
-		// 	//String texto = cur.get("text");
-		// 	System.out.println(cur.get("text"));
-		// }
-		// cursor.close();
 
 		Elastic e = new Elastic();
 		e.indexCreate();
-		System.out.println("Cantidad de tweets referentes al rock: " + e.getQuantity("rock"));
+		System.out.println("Index creado, iniciando conteo de items...");
+		e.countAllByKeywords();
+		e.countAllSentiments();
+		System.out.println("Fin.");
 	}
 
 }

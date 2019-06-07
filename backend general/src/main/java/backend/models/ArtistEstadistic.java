@@ -1,4 +1,4 @@
-package java.backend.models;
+package backend.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -26,9 +26,6 @@ public class ArtistEstadistic implements Serializable{
     @Column(name = "negative_ratio", nullable = false)
     private String negative_ratio;
 
-    @Column(name = "neutral_ratio", nullable = false)
-    private String neutral_ratio;
-
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
 
@@ -36,13 +33,13 @@ public class ArtistEstadistic implements Serializable{
     @ManyToOne
     @JoinColumn(name="artist_id")
     @JsonBackReference("artist-artist_estadistic")
-    private Artist artist;
+    private java.backend.models.Artist artist;
 
     //One estadistic belongs to one location
     @ManyToOne
     @JoinColumn(name="location_id")
     @JsonBackReference("location-artist_estadistic")
-    private Location location;
+    private java.backend.models.Location location;
 
     //Foreign keys
     private transient Integer artistId;

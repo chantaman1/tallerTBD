@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.*;
 
+import backend.models.ListaPalabra;
+import backend.services.ListaPalabraService;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.mongodb.*;
 import com.mongodb.client.FindIterable;
@@ -32,6 +34,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.elasticsearch.search.DocValueFormat;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.print.Doc;
 
@@ -42,6 +45,8 @@ public class Elastic{
     private ArrayList<Integer> resultListGeneral;
     private int positiveResultGeneral;
     private int negativeResultGeneral;
+    @Autowired
+    ListaPalabraService listaPalabraService;
 
     public void indexCreate() {
         try {
@@ -99,7 +104,7 @@ public class Elastic{
         }
     }
 
-    public int getQuantity(String genre){
+    private int getQuantity(String genre){
             int total = 0;
 
             try {
@@ -110,7 +115,6 @@ public class Elastic{
                 Query query = parser.parse(genre);
                 TopDocs result = searcher.search(query, 25000);
                 ScoreDoc[] hits = result.scoreDocs;
-
                 total = hits.length;
 
                 reader.close();
@@ -119,7 +123,41 @@ public class Elastic{
             }
 
             return total;
+    }
+
+    private int getSentimentAnalysis(String sentiment){
+        int total = 0;
+
+        try {
+            IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get("indice/")));
+            IndexSearcher searcher = new IndexSearcher(reader);
+            Analyzer analyzer = new StandardAnalyzer();
+            QueryParser parser = new QueryParser("sentimentAnalysis", analyzer);
+            Query query = parser.parse(sentiment);
+            TopDocs result = searcher.search(query, 25000);
+            ScoreDoc[] hits = result.scoreDocs;
+            total = hits.length;
+
+            reader.close();
+        } catch(IOException | ParseException ex) {
+            Logger.getLogger(Elastic.class.getName()).log(Level.SEVERE,null,ex);
         }
+
+        return total;
+    }
+
+    public void countAllByKeywords(){
+        List<ListaPalabra> palabras = listaPalabraService.getAllPalabras();
+        for(ListaPalabra palabra : palabras){
+            int cantidad = getQuantity(palabra.getPalabra());
+        }
+
+    }
+
+    public void countAllSentiments(){
+        int negative = getSentimentAnalysis("negative");
+        int positive = getSentimentAnalysis("positive");
+    }
 }
 
 
