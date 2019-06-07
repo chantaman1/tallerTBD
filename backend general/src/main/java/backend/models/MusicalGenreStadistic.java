@@ -1,4 +1,4 @@
-package java.backend.models;
+package backend.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 

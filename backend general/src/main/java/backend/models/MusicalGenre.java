@@ -20,12 +20,4 @@ public class MusicalGenre {
 
     @Column(name = "musicalGenre_genre", nullable = false)
     private String genre;
-
-    @OneToMany(targetEntity = java.backend.models.StatsMusicalGenre.class, mappedBy = "musicalGenre", cascade = CascadeType.ALL)
-    @JsonBackReference("keyword-musicalGenre")
-    private List<MusicalGenre> statsGenre;
-
-    @OneToMany(targetEntity = java.backend.models.Keywords.class, mappedBy = "musicalGenre", cascade = CascadeType.ALL)
-    @JsonBackReference("musicalGenre-statsMusicalGenre")
-    private List<java.backend.models.StatsMusicalGenre> keywordsGenre;
 }

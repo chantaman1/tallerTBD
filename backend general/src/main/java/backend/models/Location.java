@@ -1,10 +1,9 @@
-package java.backend.models;
+package backend.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-import backend.models.ArtistEstadistic;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;

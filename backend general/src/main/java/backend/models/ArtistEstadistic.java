@@ -33,13 +33,13 @@ public class ArtistEstadistic implements Serializable{
     @ManyToOne
     @JoinColumn(name="artist_id")
     @JsonBackReference("artist-artist_estadistic")
-    private java.backend.models.Artist artist;
+    private Artist artist;
 
     //One estadistic belongs to one location
     @ManyToOne
     @JoinColumn(name="location_id")
     @JsonBackReference("location-artist_estadistic")
-    private java.backend.models.Location location;
+    private Location location;
 
     //Foreign keys
     private transient Integer artistId;

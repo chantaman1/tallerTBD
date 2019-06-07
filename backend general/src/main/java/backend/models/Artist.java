@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-import backend.models.ArtistEstadistic;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Getter;
@@ -22,11 +21,6 @@ public class Artist implements Serializable{
 
 	@Column(name = "name", nullable = false)
 	private String name;
-
-	//One artist has many keywords.
-    @OneToMany(targetEntity = java.backend.models.Keywords.class, mappedBy = "keywords", cascade = CascadeType.ALL)
-    @JsonManagedReference("keywords")
-    private List<java.backend.models.Keywords> keywords;
 
     //One artist has many estadistics.
     @OneToMany(targetEntity = ArtistEstadistic.class, mappedBy = "artist_estadistic", cascade = CascadeType.ALL)
