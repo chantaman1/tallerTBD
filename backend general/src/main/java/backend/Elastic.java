@@ -148,7 +148,7 @@ public class Elastic{
         return total;
     }
 
-    private int getGenreAndSentiment(String sentiment, String genre){
+    public int getGenreAndSentiment(String sentiment, String genre){
         int total = 0;
 
         try {
