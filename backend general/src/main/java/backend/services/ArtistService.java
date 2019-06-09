@@ -100,6 +100,29 @@ public class ArtistService {
         return result;
     }
 
+    @GetMapping("/popularArtists")
+    @ResponseBody
+    public HashMap<String,Integer> getPopular(){
+      HashMap<String, Integer> map = new HashMap<>();
+      List<ArtistStatistic> data = artistStatisticRepository.findAll();
+      for(ArtistStatistic artist : data){
+          Artist artistData = artistRepository.findArtistById(artist.getArtistId());
+          map.put(artistData.getName(), artist.getPositives() + artist.getNegatives());
+      }
+      HashMap<String,Integer> sorted = sortByValue(map, false);
+      //Keep the top 3
+      Iterator<String> iteration = sorted.keySet().iterator();
+      int top = 0;
+      while (iteration.hasNext()){
+        String key = iteration.next();
+        if (top >= 3){
+          iteration.remove();
+        }
+        top++;
+      }
+      return sorted;
+    }
+
     private static HashMap<String, Integer> sortByValue(Map<String, Integer> unsortMap, final boolean order)
     {
         List<Map.Entry<String, Integer>> list = new LinkedList<>(unsortMap.entrySet());

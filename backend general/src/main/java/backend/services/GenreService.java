@@ -81,6 +81,30 @@ public class GenreService {
         return sortByValue(map, false);
     }
 
+    @GetMapping("/popularGenres")
+    @ResponseBody
+    public HashMap<String,Integer> getPopular(){
+      HashMap<String, Integer> map = new HashMap<>();
+      List<GenreStatistic> data = genreStatisticRepository.findAll();
+      for(GenreStatistic genre : data){
+          Genre genreData = genreRepository.findGenreById(genre.getGenreId());
+          map.put(genreData.getGenre(), genre.getPositives() + genre.getNegatives());
+      }
+      HashMap<String,Integer> sorted = sortByValue(map, false);
+      //Keep the top 3
+      Iterator<String> iteration = sorted.keySet().iterator();
+      int top = 0;
+      while (iteration.hasNext()){
+        String key = iteration.next();
+        if (top >= 3){
+          iteration.remove();
+        }
+        top++;
+      }
+      return sorted;
+    }
+
+
     @GetMapping("/getGenreStadistic")
     @ResponseBody
     public List<HashMap<String, Object>> getGenreStadistic(){
