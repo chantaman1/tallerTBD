@@ -82,6 +82,24 @@ public class ArtistService {
         return sortByValue(map, false);
     }
 
+    @GetMapping("/getArtistStadistic")
+    @ResponseBody
+    public List<HashMap<String, Object>> getArtistStadistic(){
+        HashMap<String, Object> map = new HashMap<>();
+        List<HashMap<String, Object>> result = new ArrayList<>();
+        List<ArtistStatistic> data = artistStatisticRepository.findAll();
+        for(ArtistStatistic artist : data){
+            Artist artistData = artistRepository.findArtistById(artist.getArtistId());
+            map.put("artist", artistData.getName());
+            map.put("positive", artist.getPositives());
+            map.put("negative", artist.getNegatives());
+            map.put("total", artist.getPositives() + artist.getNegatives());
+            result.add(map);
+            map = new HashMap<>();
+        }
+        return result;
+    }
+
     private static HashMap<String, Integer> sortByValue(Map<String, Integer> unsortMap, final boolean order)
     {
         List<Map.Entry<String, Integer>> list = new LinkedList<>(unsortMap.entrySet());
