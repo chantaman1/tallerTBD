@@ -83,7 +83,7 @@ public class GenreService {
 
     @GetMapping("/popularGenres")
     @ResponseBody
-    public HashMap<String,Integer> getPopular(){
+    public List<Map> getPopular(){
       HashMap<String, Integer> map = new HashMap<>();
       List<GenreStatistic> data = genreStatisticRepository.findAll();
       for(GenreStatistic genre : data){
@@ -96,12 +96,23 @@ public class GenreService {
       int top = 0;
       while (iteration.hasNext()){
         String key = iteration.next();
-        if (top >= 3){
+        if (top >= 5){
           iteration.remove();
         }
         top++;
       }
-      return sorted;
+
+      List<Map> list = new ArrayList<>();
+      Iterator it = sorted.entrySet().iterator();
+      while(it.hasNext()){
+        HashMap<String,Object> out = new HashMap<>();
+        Map.Entry pair = (Map.Entry)it.next();
+        out.put("genero",pair.getKey());
+        out.put("total",pair.getValue());
+        list.add(out);
+        //System.out.println(pair.getKey() + "=" + pair.getValue());
+      }
+      return list;
     }
 
 

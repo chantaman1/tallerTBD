@@ -102,7 +102,7 @@ public class ArtistService {
 
     @GetMapping("/popularArtists")
     @ResponseBody
-    public HashMap<String,Integer> getPopular(){
+    public List<Map> getPopular(){
       HashMap<String, Integer> map = new HashMap<>();
       List<ArtistStatistic> data = artistStatisticRepository.findAll();
       for(ArtistStatistic artist : data){
@@ -115,12 +115,23 @@ public class ArtistService {
       int top = 0;
       while (iteration.hasNext()){
         String key = iteration.next();
-        if (top >= 3){
+        if (top >= 5){
           iteration.remove();
         }
         top++;
       }
-      return sorted;
+
+      List<Map> list = new ArrayList<>();
+      Iterator it = sorted.entrySet().iterator();
+      while(it.hasNext()){
+        HashMap<String,Object> out = new HashMap<>();
+        Map.Entry pair = (Map.Entry)it.next();
+        out.put("artista",pair.getKey());
+        out.put("total",pair.getValue());
+        list.add(out);
+        //System.out.println(pair.getKey() + "=" + pair.getValue());
+      }
+      return list;
     }
 
     private static HashMap<String, Integer> sortByValue(Map<String, Integer> unsortMap, final boolean order)
