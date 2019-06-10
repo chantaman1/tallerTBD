@@ -150,14 +150,49 @@ public class Elastic{
 
     public int getGenreAndSentiment(String sentiment, String genre){
         int total = 0;
-
+        String[] strSplit = genre.split(" ");
+        String textQuery;
+        if(strSplit.length > 1){
+            textQuery = strSplit[0] + "\\ " + strSplit[1];
+        }
+        else{
+            textQuery = genre;
+        }
         try {
             IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get("indice/")));
             IndexSearcher searcher = new IndexSearcher(reader);
             Analyzer analyzer = new StandardAnalyzer();
             QueryParser parser = new QueryParser("<default field>", analyzer);
-            String special = "text:" + genre + " AND sentimentAnalysis:" + sentiment;
+            String special = "text:" + textQuery + " AND sentimentAnalysis:" + sentiment;
             TopDocs result = searcher.search(parser.parse(special), 100000);
+            ScoreDoc[] hits = result.scoreDocs;
+            total = hits.length;
+
+            reader.close();
+        } catch(IOException | ParseException ex) {
+            Logger.getLogger(Elastic.class.getName()).log(Level.SEVERE,null,ex);
+        }
+
+        return total;
+    }
+
+    public int getGenreAndSentimentBetweenDates(String sentiment, String genre, String startDate, String endDate){
+        int total = 0;
+        String[] strSplit = genre.split(" ");
+        String textQuery;
+        if(strSplit.length > 1){
+            textQuery = strSplit[0] + "\\ " + strSplit[1];
+        }
+        else{
+            textQuery = genre;
+        }
+        try {
+            IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get("indice/")));
+            IndexSearcher searcher = new IndexSearcher(reader);
+            Analyzer analyzer = new StandardAnalyzer();
+            QueryParser parser = new QueryParser("<default field>", analyzer);
+            String special = "date:[" + startDate + " TO " + endDate + "] AND text:" + textQuery + " AND sentimentAnalysis:" + sentiment;
+            TopDocs result = searcher.search(parser.parse(special), 500000);
             ScoreDoc[] hits = result.scoreDocs;
             total = hits.length;
 

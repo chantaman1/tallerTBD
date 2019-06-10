@@ -14,6 +14,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // seeder.seedArtistsStatistic();
         // seeder.seedGenresStatistic();
+		seeder.dateSeed();
     }
 
 }

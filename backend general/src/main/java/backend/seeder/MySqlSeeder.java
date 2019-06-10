@@ -69,4 +69,9 @@ public class MySqlSeeder{
 			genreStatisticRepository.save(statistic);
 		}
 	}
+
+	public void dateSeed(){
+		int total = e.getGenreAndSentimentBetweenDates("positive", "daddy yankee", "20190520", "*");
+		System.out.println("Total encontraos por fecha: " + total);
+	}
 }
