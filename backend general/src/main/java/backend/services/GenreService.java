@@ -169,7 +169,7 @@ public class GenreService {
                 map.put(genre.getGenre(), total);
             }
             date++;
-            HashMap<String, Integer> myMap = getTop5HashMap(sortByValue(map, false));
+            HashMap<String, Integer> myMap = sortByValue(map, false);
             Iterator it = myMap.entrySet().iterator();
             while (it.hasNext()) {
                 HashMap<String, Object> out = new HashMap<>();
