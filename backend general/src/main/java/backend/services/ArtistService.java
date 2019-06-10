@@ -159,6 +159,37 @@ public class ArtistService {
         return result;
     }
 
+    @GetMapping("/getbydate")
+    @ResponseBody
+    public List<List<HashMap<String, Object>>> getGenreByDate() {
+        List<Artist> artistData = artistRepository.findAll();
+        HashMap<String, Integer> map = new HashMap<>();
+        List<HashMap<String, Object>> eachDate = new ArrayList<>();
+        List<List<HashMap<String, Object>>> result = new ArrayList<>();
+        int date = 20190601;
+        for (int i = 0; i < 8; i++) {
+            for (Artist artist : artistData) {
+                int total = sqlSeeder.findByDate("positive", artist.getName(), Integer.toString(date)) + sqlSeeder.findByDate("negative", artist.getName(), Integer.toString(date));
+                map.put(artist.getName(), total);
+            }
+            date++;
+            HashMap<String, Integer> myMap = getTop5HashMap(sortByValue(map, false));
+            Iterator it = myMap.entrySet().iterator();
+            while (it.hasNext()) {
+                HashMap<String, Object> out = new HashMap<>();
+                Map.Entry pair = (Map.Entry) it.next();
+                out.put("artista", pair.getKey());
+                out.put("total", pair.getValue());
+                out.put("fecha", Integer.toString(date));
+                eachDate.add(out);
+            }
+            result.add(eachDate);
+            eachDate = new ArrayList<>();
+            map = new HashMap<>();
+        }
+        return result;
+    }
+
     private String transformDate(String date){
         if(date != null){
             String[] temp = date.split("/");
@@ -186,5 +217,16 @@ public class ArtistService {
         return list.stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> b, LinkedHashMap::new));
 
     }
-
+    private HashMap<String, Integer> getTop5HashMap(HashMap<String, Integer> dataMap) {
+        Iterator<String> iteration = dataMap.keySet().iterator();
+        int top = 0;
+        while (iteration.hasNext()) {
+            String key = iteration.next();
+            if (top >= 5) {
+                iteration.remove();
+            }
+            top++;
+        }
+        return dataMap;
+    }
 }

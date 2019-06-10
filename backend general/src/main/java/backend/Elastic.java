@@ -218,6 +218,41 @@ public class Elastic{
         return total;
     }
 
+    public int getGenreAndSentimentByDate(String sentiment, String genre, String date){
+        int total = 0;
+        String[] strSplit = genre.split(" ");
+        String textQuery = "";
+        if(strSplit.length > 1){
+            for(int i = 0; i < strSplit.length ; i++) {
+                if(i + 1 == strSplit.length){
+                    textQuery = textQuery + strSplit[i];
+                }
+                else {
+                    textQuery = textQuery + strSplit[i] + "\\ ";
+                }
+            }
+        }
+        else{
+            textQuery = genre;
+        }
+        try {
+            IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get("indice/")));
+            IndexSearcher searcher = new IndexSearcher(reader);
+            Analyzer analyzer = new StandardAnalyzer();
+            QueryParser parser = new QueryParser("<default field>", analyzer);
+            String special = "date:" + date + " AND text:" + textQuery + " AND sentimentAnalysis:" + sentiment;
+            TopDocs result = searcher.search(parser.parse(special), 520000);
+            ScoreDoc[] hits = result.scoreDocs;
+            total = hits.length;
+
+            reader.close();
+        } catch(IOException | ParseException ex) {
+            Logger.getLogger(Elastic.class.getName()).log(Level.SEVERE,null,ex);
+        }
+
+        return total;
+    }
+
     public void countAllKeywordAndSentiments(){
         //List<ListaPalabra> palabras = listaPalabraService.getAllPalabras();
         List<String> palabras = new ArrayList<>();

@@ -73,4 +73,8 @@ public class MySqlSeeder{
 	public int dateSeed(String sentiment, String genre, String startDate, String endDate){
 		return e.getGenreAndSentimentBetweenDates(sentiment, genre, startDate, endDate);
 	}
+
+	public int findByDate(String sentiment, String genre, String date){
+		return e.getGenreAndSentimentByDate(sentiment, genre, date);
+	}
 }
