@@ -57,9 +57,9 @@ public class Elastic{
             IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
             iwc.setOpenMode(OpenMode.CREATE);
             IndexWriter writer = new IndexWriter(dir, iwc);
-            
+
             //Mongo connection
-            
+
             MongoConnection mongo = MongoConnection.getMongo();
             mongo.OpenMongoClient();
             DBCursor cursor = mongo.getTweets();
@@ -231,30 +231,3 @@ public class Elastic{
         int positive = getSentimentAnalysis("positive");
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
