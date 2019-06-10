@@ -6,6 +6,8 @@ import backend.models.GenreStatistic;
 import backend.repositories.GenreRepository;
 import backend.repositories.GenreStatisticRepository;
 
+import backend.seeder.MySqlSeeder;
+import com.sun.tools.javac.jvm.Gen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,9 @@ public class GenreService {
     private GenreRepository genreRepository;
     @Autowired
     private GenreStatisticRepository genreStatisticRepository;
+
+    @Autowired
+    private MySqlSeeder sqlSeeder;
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -128,6 +133,27 @@ public class GenreService {
             map.put("positive", genre.getPositives());
             map.put("negative", genre.getNegatives());
             map.put("total", genre.getPositives() + genre.getNegatives());
+            result.add(map);
+            map = new HashMap<>();
+        }
+        return result;
+    }
+
+    @GetMapping("/obtenerPorFecha")
+    @ResponseBody
+    public List<HashMap<String, Object>> getArtistByDate(/*@RequestBody Map<String, Object> jsonData*/){
+        List<Genre> genres = genreRepository.findAll();
+        //String startDate = transformDate(jsonData.get("fechaInicio").toString());
+        //String endDate = transformDate(jsonData.get("fechaTermino").toString());
+        List<HashMap<String, Object>> result = new ArrayList<>();
+        HashMap<String, Object> map = new HashMap<>();
+
+        for(Genre genre : genres){
+            map.put("artist", genre.getGenre());
+            map.put("positive", sqlSeeder.dateSeed("positive", genre.getGenre(), "20190520", "*"));
+            map.put("negative", sqlSeeder.dateSeed("negative", genre.getGenre(), "20190520", "*"));
+            map.put("startDate", "20190520");
+            map.put("endDate", "20190610");
             result.add(map);
             map = new HashMap<>();
         }

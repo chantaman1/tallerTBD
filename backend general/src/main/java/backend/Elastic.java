@@ -115,7 +115,7 @@ public class Elastic{
                 Analyzer analyzer = new StandardAnalyzer();
                 QueryParser parser = new QueryParser("text", analyzer);
                 Query query = parser.parse(genre);
-                TopDocs result = searcher.search(query, 25000);
+                TopDocs result = searcher.search(query, 560000);
                 ScoreDoc[] hits = result.scoreDocs;
                 total = hits.length;
 
@@ -136,7 +136,7 @@ public class Elastic{
             Analyzer analyzer = new StandardAnalyzer();
             QueryParser parser = new QueryParser("sentimentAnalysis", analyzer);
             Query query = parser.parse(sentiment);
-            TopDocs result = searcher.search(query, 25000);
+            TopDocs result = searcher.search(query, 550000);
             ScoreDoc[] hits = result.scoreDocs;
             total = hits.length;
 
@@ -151,9 +151,16 @@ public class Elastic{
     public int getGenreAndSentiment(String sentiment, String genre){
         int total = 0;
         String[] strSplit = genre.split(" ");
-        String textQuery;
+        String textQuery = "";
         if(strSplit.length > 1){
-            textQuery = strSplit[0] + "\\ " + strSplit[1];
+            for(int i = 0; i < strSplit.length ; i++) {
+                if(i + 1 == strSplit.length){
+                    textQuery = textQuery + strSplit[i];
+                }
+                else {
+                    textQuery = textQuery + strSplit[i] + "\\ ";
+                }
+            }
         }
         else{
             textQuery = genre;
@@ -164,7 +171,7 @@ public class Elastic{
             Analyzer analyzer = new StandardAnalyzer();
             QueryParser parser = new QueryParser("<default field>", analyzer);
             String special = "text:" + textQuery + " AND sentimentAnalysis:" + sentiment;
-            TopDocs result = searcher.search(parser.parse(special), 100000);
+            TopDocs result = searcher.search(parser.parse(special), 550000);
             ScoreDoc[] hits = result.scoreDocs;
             total = hits.length;
 
@@ -179,9 +186,16 @@ public class Elastic{
     public int getGenreAndSentimentBetweenDates(String sentiment, String genre, String startDate, String endDate){
         int total = 0;
         String[] strSplit = genre.split(" ");
-        String textQuery;
+        String textQuery = "";
         if(strSplit.length > 1){
-            textQuery = strSplit[0] + "\\ " + strSplit[1];
+            for(int i = 0; i < strSplit.length ; i++) {
+                if(i + 1 == strSplit.length){
+                    textQuery = textQuery + strSplit[i];
+                }
+                else {
+                    textQuery = textQuery + strSplit[i] + "\\ ";
+                }
+            }
         }
         else{
             textQuery = genre;

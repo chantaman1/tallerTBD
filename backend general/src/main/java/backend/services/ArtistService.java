@@ -6,6 +6,7 @@ import backend.models.ArtistStatistic;
 import backend.repositories.ArtistRepository;
 
 import backend.repositories.ArtistStatisticRepository;
+import backend.seeder.MySqlSeeder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,9 @@ public class ArtistService {
 
     @Autowired
     private ArtistStatisticRepository artistStatisticRepository;
+
+    @Autowired
+    MySqlSeeder sqlSeeder;
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -132,6 +136,41 @@ public class ArtistService {
         //System.out.println(pair.getKey() + "=" + pair.getValue());
       }
       return list;
+    }
+
+    @GetMapping("/obtenerPorFecha")
+    @ResponseBody
+    public List<HashMap<String, Object>> getArtistByDate(/*@RequestBody Map<String, Object> jsonData*/){
+        List<Artist> artists = artistRepository.findAll();
+        //String startDate = transformDate(jsonData.get("fechaInicio").toString());
+        //String endDate = transformDate(jsonData.get("fechaTermino").toString());
+        List<HashMap<String, Object>> result = new ArrayList<>();
+        HashMap<String, Object> map = new HashMap<>();
+
+        for(Artist artist : artists){
+            map.put("artist", artist.getName());
+            map.put("positive", sqlSeeder.dateSeed("positive", artist.getName(), "20190520", "*"));
+            map.put("negative", sqlSeeder.dateSeed("negative", artist.getName(), "20190520", "*"));
+            map.put("startDate", "20190520");
+            map.put("endDate", "20190610");
+            result.add(map);
+            map = new HashMap<>();
+        }
+        return result;
+    }
+
+    private String transformDate(String date){
+        if(date != null){
+            String[] temp = date.split("/");
+            String out = "";
+            for(int i = 0; i < temp.length; i++){
+                out = out + temp[i];
+            }
+            return out;
+        }
+        else{
+            return date;
+        }
     }
 
     private static HashMap<String, Integer> sortByValue(Map<String, Integer> unsortMap, final boolean order)
