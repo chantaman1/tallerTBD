@@ -85,11 +85,8 @@ public class Elastic{
                 doc.add(new TextField("sentimentAnalysis", cur.get("sentimentAnalysis").toString(), Field.Store.YES));
 
                 if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
-                    System.out.println("Usuario del tweet: " + doc.get("userName"));
                     System.out.println("Indexando el tweet: " + doc.get("text"));
                     System.out.println("Fecha del tweet :" + doc.get("date"));
-                    System.out.println("Análisis del tweet :" + doc.get("sentimentAnalysis"));
-                    System.out.println("Followers :" + doc.get("followersCount") + "\n");
                     writer.addDocument(doc);
                     // System.out.println(doc);
                 } else {
