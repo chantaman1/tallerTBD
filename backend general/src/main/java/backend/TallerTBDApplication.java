@@ -21,7 +21,7 @@ public class TallerTBDApplication {
 		 Elastic e = new Elastic();
 		 e.indexCreate();
 		 System.out.println("Index creado, saliendo...");
-     System.exit();
+     System.exit(0);
 		//MySqlSeeder seeder = new MySqlSeeder();
 		//seeder.seedArtistsStatistic();
 		//seeder.seedGenresStatistic();
