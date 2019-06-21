@@ -85,11 +85,8 @@ public class Elastic{
                 doc.add(new TextField("sentimentAnalysis", cur.get("sentimentAnalysis").toString(), Field.Store.YES));
 
                 if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
-                    System.out.println("Usuario del tweet: " + doc.get("userName"));
                     System.out.println("Indexando el tweet: " + doc.get("text"));
                     System.out.println("Fecha del tweet :" + doc.get("date"));
-                    System.out.println("Análisis del tweet :" + doc.get("sentimentAnalysis"));
-                    System.out.println("Followers :" + doc.get("followersCount") + "\n");
                     writer.addDocument(doc);
                     // System.out.println(doc);
                 } else {
@@ -150,27 +147,12 @@ public class Elastic{
 
     public int getGenreAndSentiment(String sentiment, String genre){
         int total = 0;
-        String[] strSplit = genre.split(" ");
-        String textQuery = "";
-        if(strSplit.length > 1){
-            for(int i = 0; i < strSplit.length ; i++) {
-                if(i + 1 == strSplit.length){
-                    textQuery = textQuery + strSplit[i];
-                }
-                else {
-                    textQuery = textQuery + strSplit[i] + "\\ ";
-                }
-            }
-        }
-        else{
-            textQuery = genre;
-        }
         try {
             IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get("indice/")));
             IndexSearcher searcher = new IndexSearcher(reader);
             Analyzer analyzer = new StandardAnalyzer();
             QueryParser parser = new QueryParser("<default field>", analyzer);
-            String special = "text:" + textQuery + " AND sentimentAnalysis:" + sentiment;
+            String special = "text:\"" + genre + "\" AND sentimentAnalysis:" + sentiment;
             TopDocs result = searcher.search(parser.parse(special), 550000);
             ScoreDoc[] hits = result.scoreDocs;
             total = hits.length;

@@ -44,12 +44,20 @@ public class MySqlSeeder{
 			System.out.println("Positivos: " + e.getGenreAndSentiment("positive", artist.getName().toLowerCase()));
 			System.out.println("Negativos: " + e.getGenreAndSentiment("negative", artist.getName().toLowerCase()));
 
-			ArtistStatistic statistic = new ArtistStatistic();
-			statistic.setPositives(e.getGenreAndSentiment("positive", artist.getName().toLowerCase()));
-			statistic.setNegatives(e.getGenreAndSentiment("negative", artist.getName().toLowerCase()));
-			statistic.setArtistId(artist.getId());
-
-			artistStatisticRepository.save(statistic);
+			ArtistStatistic statistic = artistStatisticRepository.findArtistStatisticById(artist.getId());
+			if(statistic != null){
+				statistic.setPositives(e.getGenreAndSentiment("positive", artist.getName().toLowerCase()));
+				statistic.setNegatives(e.getGenreAndSentiment("negative", artist.getName().toLowerCase()));
+				statistic.setArtistId(artist.getId());
+				artistStatisticRepository.save(statistic);
+			}
+			else{
+				ArtistStatistic stats = new ArtistStatistic();
+				stats.setPositives(e.getGenreAndSentiment("positive", artist.getName().toLowerCase()));
+				stats.setNegatives(e.getGenreAndSentiment("negative", artist.getName().toLowerCase()));
+				stats.setArtistId(artist.getId());
+				artistStatisticRepository.save(stats);
+			}
 		}
 	}
 
@@ -61,12 +69,20 @@ public class MySqlSeeder{
 			System.out.println("Positivos: " + e.getGenreAndSentiment("positive", genre.getGenre().toLowerCase()));
 			System.out.println("Negativos: " + e.getGenreAndSentiment("negative", genre.getGenre().toLowerCase()));
 
-			GenreStatistic statistic = new GenreStatistic();
-			statistic.setPositives(e.getGenreAndSentiment("positive", genre.getGenre().toLowerCase()));
-			statistic.setNegatives(e.getGenreAndSentiment("negative", genre.getGenre().toLowerCase()));
-			statistic.setGenreId(genre.getId());
-
-			genreStatisticRepository.save(statistic);
+			GenreStatistic statistic = genreStatisticRepository.findGenreStatisticById(genre.getId());
+			if(statistic != null){
+				statistic.setPositives(e.getGenreAndSentiment("positive", genre.getGenre().toLowerCase()));
+				statistic.setNegatives(e.getGenreAndSentiment("negative", genre.getGenre().toLowerCase()));
+				statistic.setGenreId(genre.getId());
+				genreStatisticRepository.save(statistic);
+			}
+			else{
+				GenreStatistic stats = new GenreStatistic();
+				stats.setPositives(e.getGenreAndSentiment("positive", genre.getGenre().toLowerCase()));
+				stats.setNegatives(e.getGenreAndSentiment("negative", genre.getGenre().toLowerCase()));
+				stats.setGenreId(genre.getId());
+				genreStatisticRepository.save(stats);
+			}
 		}
 	}
 

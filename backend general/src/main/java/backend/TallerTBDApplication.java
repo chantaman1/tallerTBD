@@ -18,13 +18,10 @@ public class TallerTBDApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TallerTBDApplication.class, args);
 
-		 /*Elastic e = new Elastic();
+		/*Elastic e = new Elastic();
 		 e.indexCreate();
-		 System.out.println("Index creado, iniciando conteo de items...");
-		 e.countAllKeywordAndSentiments();
-		e.countAllByKeywords();
-		e.countAllSentiments();
-		 System.out.println("Fin.");*/
+		 System.out.println("Index creado, saliendo...");
+		 System.exit(0);*/
 		//MySqlSeeder seeder = new MySqlSeeder();
 		//seeder.seedArtistsStatistic();
 		//seeder.seedGenresStatistic();
