@@ -12,12 +12,12 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
 	@Override
     public void run(String... args) throws Exception {
-         //seeder.seedArtistsStatistic();
-         //seeder.seedGenresStatistic();
+        //seeder.seedArtistsStatistic();
+        //seeder.seedGenresStatistic();
         //seeder.createUserNodes();
         //seeder.feedNeo4JNodes();
-        seeder.createRelationsUserArtist();
-        seeder.createRelationsUserGenre();
+        //seeder.createRelationsUserArtist();
+        //seeder.createRelationsUserGenre();
     }
 
 }
