@@ -1,18 +1,20 @@
-package backend;
+package backend.Neo4J;
 
 import backend.models.Artist;
-import backend.models.ArtistStatistic;
 import backend.models.Genre;
 import backend.repositories.ArtistRepository;
 import backend.repositories.ArtistStatisticRepository;
 import backend.repositories.GenreRepository;
 import backend.repositories.GenreStatisticRepository;
 import com.mongodb.*;
+import com.mongodb.client.MongoClients;
 import org.neo4j.driver.v1.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class Neo4J {
     private Driver driver;
     private Session session;
@@ -26,7 +28,10 @@ public class Neo4J {
     @Autowired
     GenreRepository genreRepository;
 
-    public void connect(String url, String username, String password){
+    public void connect(){
+        String url = "bolt://134.209.166.153:7687";
+        String username = "neo4j";
+        String password = "tallertbd";
         this.driver = GraphDatabase.driver(url, AuthTokens.basic(username, password));
         this.session = driver.session();
     }
@@ -42,22 +47,28 @@ public class Neo4J {
     }
 
     public void crearNodosUsuario(){
+        System.out.println("Connecting to mongo.");
         MongoClient mongoo = new MongoClient("18.220.76.177", 27017);
         DB db= mongoo.getDB("twitter");
         DBCollection col=db.getCollection("tweet");
-
-        DBObject group = new BasicDBObject("$group", new BasicDBObject("_id", "$userScreenName")
-                .append("seguidores", new BasicDBObject("$avg", "$userFollowersCount")));
-
+        System.out.println("Connected.");
+        DBObject group = new BasicDBObject("$group", new BasicDBObject("_id", "$userName")
+                .append("seguidores", new BasicDBObject("$avg", "$followersCount")));
+        System.out.println("Creating group of items.");
         DBObject sort = new BasicDBObject("$sort", new BasicDBObject("seguidores", -1));
-        DBObject limit= new BasicDBObject("$limit",100);
+        DBObject limit= new BasicDBObject("$limit",400);
+        System.out.println("Sorting items.");
         AggregationOutput output = col.aggregate(group,sort,limit);
         int cantidad =output.hashCode();
         int i=0;
+        System.out.println("Starting proccess.");
         for (DBObject result : output.results()) {
-            System.out.println(result);
-            i++;
-            session.run("create (a:User {name:'"+limpiar(result.get("_id").toString())+"', followers:"+result.get("seguidores")+"})");
+            long followers = convertToLong(result.get("seguidores").toString());
+            if(followers > 10){
+                System.out.println(result);
+                i++;
+                session.run("create (a:Usuario {name:'"+limpiar(result.get("_id").toString())+"', followers:"+followers+"})");
+            }
         }
         System.out.println("Usuarios agregados");
         mongoo.close();
@@ -96,19 +107,19 @@ public class Neo4J {
         System.out.println("Se creo nodo usuario");
     }
 
-    public void crearRelacionUsuarioGenero(String genre, String usuario){
+    public void crearRelacionUsuarioGenero(String genre, String usuario, int peso){
         this.session.run("MATCH (u:Usuario),(v:Genero) WHERE u.name='"+usuario+"' AND v.name='"+genre+"'"
-                + " CREATE (u)-[r:TwitteaGenero]->(v)");
-        System.out.println("Se crea la relacion usuario-genero");
+                + " CREATE (u)-[r:TwitteaGenero {weight:'"+peso+"'}]->(v)");
     }
 
-    public void crearRelacionUsuarioArtista(String artist, String usuario){
+    public void crearRelacionUsuarioArtista(String artist, String usuario, int peso){
         this.session.run("MATCH (u:Usuario),(v:Artista) WHERE u.name='"+usuario+"' AND v.name='"+artist+"'"
-                + " CREATE (u)-[r:TwitteaArtista]->(v)");
-        System.out.println("Se crea la relacion usuario-artista");
+                + " CREATE (u)-[r:TwitteaArtista {weight:'"+peso+"'}]->(v)");
     }
 
-
+    public StatementResult obtenerUsuarios(){
+       return this.session.run("match (n:Usuario) RETURN n LIMIT 400");
+    }
 
     public String limpiar(String nombre) {
         nombre = nombre.replace("'", "");
@@ -152,5 +163,16 @@ public class Neo4J {
             nombre = nombre.replace("AND", "aanndd");
         }
         return nombre;
+    }
+
+    public Long convertToLong(String o){
+        String[] split = o.split("\\.");
+        if(split.length > 0){
+            Long convertedLong = Long.parseLong(split[0]);
+            return convertedLong;
+        }
+        else{
+            return 0L;
+        }
     }
 }

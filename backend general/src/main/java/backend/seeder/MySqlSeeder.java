@@ -1,24 +1,21 @@
 package backend.seeder;
 
 import backend.Elastic;
-
+import backend.Neo4J.Neo4J;
 import backend.models.Artist;
 import backend.models.ArtistStatistic;
 import backend.models.Genre;
 import backend.models.GenreStatistic;
-
 import backend.repositories.ArtistRepository;
 import backend.repositories.ArtistStatisticRepository;
 import backend.repositories.GenreRepository;
 import backend.repositories.GenreStatisticRepository;
-
-import org.hibernate.Hibernate;
+import org.neo4j.driver.v1.Record;
+import org.neo4j.driver.v1.StatementResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class MySqlSeeder{
@@ -35,6 +32,60 @@ public class MySqlSeeder{
 
 	@Autowired
 	private GenreStatisticRepository genreStatisticRepository;
+
+	@Autowired
+	private Neo4J neo4J;
+
+	public void createUserNodes(){
+		neo4J.connect();
+		neo4J.crearNodosUsuario();
+		neo4J.disconnect();
+	}
+
+	public void feedNeo4JNodes(){
+		neo4J.connect();
+		neo4J.crearNodosArtista();
+		neo4J.crearNodosGenero();
+		neo4J.disconnect();
+	}
+
+	public void createRelationsUserArtist(){
+		neo4J.connect();
+		List<Artist> artists = artistRepository.findAll();
+		StatementResult users = neo4J.obtenerUsuarios();
+		List<Record> listaUsuarios = users.list();
+		int i = 0;
+		for(Artist artista : artists){
+			for(Record usuario : listaUsuarios){
+				int totalMatch = e.getByGenreAndUser(artista.getName(), usuario.get(0).get("name").asString());
+				if(totalMatch > 0){
+					neo4J.crearRelacionUsuarioArtista(artista.getName(), usuario.get(0).get("name").asString(), totalMatch);
+					System.out.println("Creada una relacion usuario-artista: " + i);
+					i++;
+				}
+			}
+		}
+		neo4J.disconnect();
+	}
+
+	public void createRelationsUserGenre(){
+		neo4J.connect();
+		List<Genre> genres = genreRepository.findAll();
+		StatementResult users = neo4J.obtenerUsuarios();
+		List<Record> listaUsuarios = users.list();
+		int i = 0;
+		for(Genre genre : genres){
+			for(Record usuario : listaUsuarios){
+				int totalMatch = e.getByGenreAndUser(genre.getGenre(), usuario.get(0).get("name").asString());
+				if(totalMatch > 0){
+					neo4J.crearRelacionUsuarioGenero(genre.getGenre(), usuario.get(0).get("name").asString(), totalMatch);
+					System.out.println("Creada una relacion usuario-genero: " + i);
+					i++;
+				}
+			}
+		}
+		neo4J.disconnect();
+	}
 
 	public void seedArtistsStatistic(){
 		List<Artist> artists = artistRepository.findAll();

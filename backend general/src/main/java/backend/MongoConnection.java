@@ -1,16 +1,12 @@
 package backend;
+
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.MongoClient;
 import org.bson.Document;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
-import com.mongodb.MongoClientURI;
-import java.util.*;
 
 public class MongoConnection{
     private static volatile MongoConnection instance;

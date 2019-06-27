@@ -1,43 +1,32 @@
 package backend;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.*;
-
 import backend.models.ListaPalabra;
 import backend.services.ListaPalabraService;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.mongodb.*;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
-import org.apache.lucene.document.DateTools;
+import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.*;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.elasticsearch.search.DocValueFormat;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.print.Doc;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
 public class Elastic{
@@ -154,6 +143,26 @@ public class Elastic{
             QueryParser parser = new QueryParser("<default field>", analyzer);
             String special = "text:\"" + genre + "\" AND sentimentAnalysis:" + sentiment;
             TopDocs result = searcher.search(parser.parse(special), 550000);
+            ScoreDoc[] hits = result.scoreDocs;
+            total = hits.length;
+
+            reader.close();
+        } catch(IOException | ParseException ex) {
+            Logger.getLogger(Elastic.class.getName()).log(Level.SEVERE,null,ex);
+        }
+
+        return total;
+    }
+
+    public int getByGenreAndUser(String genre, String user){
+        int total = 0;
+        try {
+            IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get("indice/")));
+            IndexSearcher searcher = new IndexSearcher(reader);
+            Analyzer analyzer = new StandardAnalyzer();
+            QueryParser parser = new QueryParser("<default field>", analyzer);
+            String special = "text:\"" + genre + "\" AND userName:\"" + user + "\"";
+            TopDocs result = searcher.search(parser.parse(special), 590000);
             ScoreDoc[] hits = result.scoreDocs;
             total = hits.length;
 

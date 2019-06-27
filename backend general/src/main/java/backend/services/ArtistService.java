@@ -1,20 +1,14 @@
 package backend.services;
 
 import backend.models.Artist;
-
 import backend.models.ArtistStatistic;
 import backend.repositories.ArtistRepository;
-
 import backend.repositories.ArtistStatisticRepository;
 import backend.seeder.MySqlSeeder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
-
 import java.text.ParseException;
-
 import java.util.*;
 import java.util.stream.Collectors;
 

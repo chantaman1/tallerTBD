@@ -1,17 +1,14 @@
 package backend.services;
 
 import backend.models.Genre;
-
 import backend.models.GenreStatistic;
 import backend.repositories.GenreRepository;
 import backend.repositories.GenreStatisticRepository;
-
 import backend.seeder.MySqlSeeder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
