@@ -101,6 +101,8 @@ public class Neo4J {
                 childrens.add(childrenData);
                 childrenData = new HashMap<>();
             }
+            List<Object> linkWith = new ArrayList<>();
+            data.put("linkWith", linkWith);
             data.put("children", childrens);
             resultData.add(data);
             childrens = new ArrayList<>();
@@ -129,6 +131,8 @@ public class Neo4J {
                 childrens.add(childrenData);
                 childrenData = new HashMap<>();
             }
+            List<Object> linkWith = new ArrayList<>();
+            data.put("linkWith", linkWith);
             data.put("children", childrens);
             resultData.add(data);
             childrens = new ArrayList<>();
