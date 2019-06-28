@@ -15,7 +15,7 @@ import org.neo4j.driver.v1.StatementResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class MySqlSeeder{
@@ -47,6 +47,50 @@ public class MySqlSeeder{
 		neo4J.crearNodosArtista();
 		neo4J.crearNodosGenero();
 		neo4J.disconnect();
+	}
+
+	public void crearRelacionUserArtist(){
+		List<Artist> artists = artistRepository.findAll();
+		for(Artist artista : artists){
+			System.out.println("Procesando: " + artista.getName());
+			List<HashMap<String, Object>> usuarios = e.getUsersAndFollowers(artista.getName());
+			neo4J.connect();
+			for(HashMap user : usuarios){
+				if(neo4J.existeUsuario(user.get("userName").toString())){
+					int totalHits = e.getByGenreAndUser(artista.getName(), user.get("userName").toString());
+					neo4J.crearRelacionUsuarioArtista(artista.getName(), user.get("userName").toString(), totalHits);
+				}
+				else{
+					neo4J.crearNodoUsuario(user.get("userName").toString(), Long.parseLong(user.get("followersCount").toString()));
+					int totalHits = e.getByGenreAndUser(artista.getName(), user.get("userName").toString());
+					neo4J.crearRelacionUsuarioArtista(artista.getName(), user.get("userName").toString(), totalHits);
+				}
+			}
+			neo4J.disconnect();
+		}
+		System.out.println("Terminado.");
+	}
+
+	public void crearRelacionUserGenre(){
+		List<Genre> genres = genreRepository.findAll();
+		for(Genre genero : genres){
+			System.out.println("Procesando: " + genero.getGenre());
+			List<HashMap<String, Object>> usuarios = e.getUsersAndFollowers(genero.getGenre());
+			neo4J.connect();
+			for(HashMap user : usuarios){
+				if(neo4J.existeUsuario(user.get("userName").toString())){
+					int totalHits = e.getByGenreAndUser(genero.getGenre(), user.get("userName").toString());
+					neo4J.crearRelacionUsuarioGenero(genero.getGenre(), user.get("userName").toString(), totalHits);
+				}
+				else{
+					neo4J.crearNodoUsuario(user.get("userName").toString(), Long.parseLong(user.get("followersCount").toString()));
+					int totalHits = e.getByGenreAndUser(genero.getGenre(), user.get("userName").toString());
+					neo4J.crearRelacionUsuarioGenero(genero.getGenre(), user.get("userName").toString(), totalHits);
+				}
+			}
+			neo4J.disconnect();
+		}
+		System.out.println("Terminado.");
 	}
 
 	public void createRelationsUserArtist(){

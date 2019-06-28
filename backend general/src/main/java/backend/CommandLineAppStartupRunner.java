@@ -18,6 +18,8 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
         //seeder.feedNeo4JNodes();
         //seeder.createRelationsUserArtist();
         //seeder.createRelationsUserGenre();
+		seeder.crearRelacionUserArtist();
+		seeder.crearRelacionUserGenre();
     }
 
 }

@@ -5,18 +5,17 @@ import backend.services.ListaPalabraService;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.*;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.elasticsearch.search.profile.query.CollectorResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -101,7 +101,7 @@ public class Elastic{
                 Analyzer analyzer = new StandardAnalyzer();
                 QueryParser parser = new QueryParser("text", analyzer);
                 Query query = parser.parse(genre);
-                TopDocs result = searcher.search(query, 560000);
+                TopDocs result = searcher.search(query, 565000);
                 ScoreDoc[] hits = result.scoreDocs;
                 total = hits.length;
 
@@ -111,6 +111,45 @@ public class Elastic{
             }
 
             return total;
+    }
+
+    public List<HashMap<String, Object>> getUsersAndFollowers(String genre){
+        List<HashMap<String, Object>> usuarios = new ArrayList<>();
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get("indice/")));
+            IndexSearcher searcher = new IndexSearcher(reader);
+            Analyzer analyzer = new StandardAnalyzer();
+            QueryParser parser = new QueryParser("<default field>", analyzer);
+            String special = "text:\"" + genre + "\"";
+            TopDocs result = searcher.search(parser.parse(special), 560000);
+            ScoreDoc[] hits = result.scoreDocs;
+            for(ScoreDoc ff : hits){
+                Document doc = reader.document(ff.doc);
+                if(indexOf(usuarios, doc.get("userName")) == -1){
+                    map.put("userName", doc.get("userName"));
+                    map.put("followers", doc.get("followersCount"));
+                    usuarios.add(map);
+                    map = new HashMap<>();
+                }
+            }
+            reader.close();
+        } catch(IOException | ParseException ex) {
+            Logger.getLogger(Elastic.class.getName()).log(Level.SEVERE,null,ex);
+        }
+        System.out.println("Total usuarios encontrados para " + genre + "es: " + usuarios.size());
+        return usuarios;
+    }
+
+    private int indexOf(List<HashMap<String, Object>> listmap, String key){
+        int index = 0;
+        for(HashMap map : listmap){
+            if(map.get("userName").equals(key)){
+                return index;
+            }
+            index++;
+        }
+        return -1;
     }
 
     private int getSentimentAnalysis(String sentiment){

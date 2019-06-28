@@ -102,7 +102,7 @@ public class Neo4J {
         System.out.println("Se creo nodo genero");
     }
 
-    public void crearNodoUsuario(String usuario, Double seguidores){
+    public void crearNodoUsuario(String usuario, Long seguidores){
         session.run("create (a:Usuario {name:'"+usuario+"', followers:"+seguidores+"})");
         System.out.println("Se creo nodo usuario");
     }
@@ -119,6 +119,17 @@ public class Neo4J {
 
     public StatementResult obtenerUsuarios(){
        return this.session.run("match (n:Usuario) RETURN n LIMIT 400");
+    }
+
+    public boolean existeUsuario(String usuario){
+        StatementResult res = this.session.run("match (n:Usuario) WHERE n.name='"+usuario+"' RETURN n");
+        List<Record> listaUsuarios = res.list();
+        if(listaUsuarios.size() > 0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public String limpiar(String nombre) {
