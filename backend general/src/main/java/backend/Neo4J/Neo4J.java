@@ -12,6 +12,8 @@ import org.neo4j.driver.v1.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -79,28 +81,60 @@ public class Neo4J {
         System.out.println("Se creo nodo artista");
     }
 
-    public void obtenerUsuarioArtista(String artista){
-        StatementResult result = this.session.run("match (n:Usuario)-[r:TwitteaArtista]-(v:Artista) WHERE v.name='"+artista+"' RETURN n,v,r ORDER BY r.weight DESC LIMIT 3");
-        List<Record> records = result.list();
-        for(Record record : records){
-            String user = record.get(0).get("name").asString();
-            int followers = record.get(0).get("followers").asInt();
-            String artist = record.get(1).get("name").asString();
-            int weight = record.get(2).get("weight").asInt();
-            System.out.println("Usuario: " + user + "\r\nFollowers: " + followers + "\r\nArtista: " + artist + "\r\nOcurrencias: " + weight + "\r\n");
+    public List<HashMap<String, Object>> obtenerUsuarioArtista(){
+        List<Artist> artistas = artistRepository.findAll();
+        List<HashMap<String, Object>> resultData = new ArrayList<>();
+        HashMap<String, Object> data = new HashMap<>();
+        List<HashMap<String, Object>> childrens = new ArrayList<>();
+        HashMap<String, Object> childrenData = new HashMap<>();
+        for(Artist artista : artistas){
+            StatementResult result = this.session.run("match (n:Usuario)-[r:TwitteaArtista]-(v:Artista) WHERE v.name='"+artista.getName()+"' RETURN n,v,r ORDER BY r.weight DESC LIMIT 3");
+            StatementResult totalArtista = this.session.run("match (n:Usuario)-[r:TwitteaArtista]-(v:Artista) WHERE v.name='"+artista.getName()+"' RETURN count(r.weight)");
+            int total = totalArtista.single().get(0).asInt();
+            data.put("name", artista.getName());
+            data.put("value", total);
+            List<Record> records = result.list();
+            for(Record record : records){
+                childrenData.put("name", record.get(0).get("name").asString());
+                childrenData.put("followers", record.get(0).get("followers").asInt());
+                childrenData.put("value", record.get(2).get("weight").asInt());
+                childrens.add(childrenData);
+                childrenData = new HashMap<>();
+            }
+            data.put("children", childrens);
+            resultData.add(data);
+            childrens = new ArrayList<>();
+            data = new HashMap<>();
         }
+        return resultData;
     }
 
-    public void obtenerUsuarioGenero(String genero){
-        StatementResult result = this.session.run("match (n:Usuario)-[r:TwitteaGenero]-(v:Genero) WHERE v.name='"+genero+"' RETURN n,v,r ORDER BY r.weight DESC LIMIT 3");
-        List<Record> records = result.list();
-        for(Record record : records){
-            String user = record.get(0).get("name").asString();
-            int followers = record.get(0).get("followers").asInt();
-            String genre = record.get(1).get("name").asString();
-            int weight = record.get(2).get("weight").asInt();
-            System.out.println("Usuario: " + user + "\r\nFollowers: " + followers + "\r\nArtista: " + genre + "\r\nOcurrencias: " + weight + "\r\n");
+    public List<HashMap<String, Object>> obtenerUsuarioGenero(){
+        List<Genre> genres = genreRepository.findAll();
+        List<HashMap<String, Object>> resultData = new ArrayList<>();
+        HashMap<String, Object> data = new HashMap<>();
+        List<HashMap<String, Object>> childrens = new ArrayList<>();
+        HashMap<String, Object> childrenData = new HashMap<>();
+        for(Genre genre : genres){
+            StatementResult result = this.session.run("match (n:Usuario)-[r:TwitteaGenero]-(v:Genero) WHERE v.name='"+genre.getGenre()+"' RETURN n,v,r ORDER BY r.weight DESC LIMIT 3");
+            StatementResult totalArtista = this.session.run("match (n:Usuario)-[r:TwitteaGenero]-(v:Genero) WHERE v.name='"+genre.getGenre()+"' RETURN count(r.weight)");
+            int total = totalArtista.single().get(0).asInt();
+            data.put("name", genre.getGenre());
+            data.put("value", total);
+            List<Record> records = result.list();
+            for(Record record : records){
+                childrenData.put("name", record.get(0).get("name").asString());
+                childrenData.put("followers", record.get(0).get("followers").asInt());
+                childrenData.put("value", record.get(2).get("weight").asInt());
+                childrens.add(childrenData);
+                childrenData = new HashMap<>();
+            }
+            data.put("children", childrens);
+            resultData.add(data);
+            childrens = new ArrayList<>();
+            data = new HashMap<>();
         }
+        return resultData;
     }
 
     public void crearNodosArtista(){

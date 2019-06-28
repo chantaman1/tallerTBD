@@ -38,8 +38,8 @@ public class MySqlSeeder{
 
 	public void test(){
 		neo4J.connect();
-		neo4J.obtenerUsuarioArtista("Daddy Yankee");
-		neo4J.obtenerUsuarioGenero("rock");
+		//neo4J.obtenerUsuarioArtista();
+		//neo4J.obtenerUsuarioGenero();
 		neo4J.disconnect();
 	}
 
