@@ -38,12 +38,10 @@ public class MySqlSeeder{
 
 	public void test(){
 		neo4J.connect();
-		//neo4J.obtenerUsuarioArtista();
-		//neo4J.obtenerUsuarioGenero();
 		neo4J.disconnect();
 	}
 	
-	public void testeoQueryCLI(){
+	/*public void testeoQueryCLI(){
 		neo4J.connect();
 
 		System.out.println("------------------QUERY BÚSQUEDA------------------");
@@ -64,7 +62,7 @@ public class MySqlSeeder{
         System.out.println("Cantidad que aparece el pop: " + neo4J.countGenreWeigth("pop").list().get(0).get("COUNT(r)"));
 
 		neo4J.disconnect();
-	}
+	}*/
 
 	public void createUserNodes(){
 		neo4J.connect();

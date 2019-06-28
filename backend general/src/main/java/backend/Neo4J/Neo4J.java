@@ -137,6 +137,60 @@ public class Neo4J {
         return resultData;
     }
 
+    public List<HashMap<String, Object>> obtenerUsuariosArtistaPopular(){
+        StatementResult mostPopular = this.session.run("MATCH (a:Usuario)-[r:TwitteaArtista]->(b:Artista) RETURN b, count(r.weight) AS weight ORDER BY weight DESC LIMIT 1");
+        List<HashMap<String, Object>> resultData = new ArrayList<>();
+        HashMap<String, Object> data = new HashMap<>();
+        List<HashMap<String, Object>> childrens = new ArrayList<>();
+        HashMap<String, Object> childrenData = new HashMap<>();
+        Record record = mostPopular.list().get(0);
+        String artista = record.get(0).get("name").asString();
+        int peso = record.get("weight").asInt();
+        data.put("name", artista);
+        data.put("value", peso);
+        StatementResult dataUsuarios = this.session.run("match (n:Usuario)-[r:TwitteaArtista]-(v:Artista) WHERE v.name='"+artista+"' RETURN n,r ORDER BY r.weight DESC LIMIT 100");
+        List<Record> usuarios = dataUsuarios.list();
+        for(Record usuario : usuarios){
+            childrenData.put("name", usuario.get(0).get("name").asString());
+            childrenData.put("followers", usuario.get(0).get("followers").asInt());
+            childrenData.put("value", usuario.get(1).get("weight").asInt());
+            childrens.add(childrenData);
+            childrenData = new HashMap<>();
+        }
+        List<Object> linkWith = new ArrayList<>();
+        data.put("linkWith", linkWith);
+        data.put("children", childrens);
+        resultData.add(data);
+        return resultData;
+    }
+
+    public List<HashMap<String, Object>> obtenerUsuariosGeneroPopular(){
+        StatementResult mostPopular = this.session.run("MATCH (a:Usuario)-[r:TwitteaGenero]->(b:Genero) RETURN b, count(r.weight) AS weight ORDER BY weight DESC LIMIT 1");
+        List<HashMap<String, Object>> resultData = new ArrayList<>();
+        HashMap<String, Object> data = new HashMap<>();
+        List<HashMap<String, Object>> childrens = new ArrayList<>();
+        HashMap<String, Object> childrenData = new HashMap<>();
+        Record record = mostPopular.list().get(0);
+        String genero = record.get(0).get("name").asString();
+        int peso = record.get("weight").asInt();
+        data.put("name", genero);
+        data.put("value", peso);
+        StatementResult dataUsuarios = this.session.run("match (n:Usuario)-[r:TwitteaGenero]-(v:Genero) WHERE v.name='"+genero+"' RETURN n,r ORDER BY r.weight DESC LIMIT 100");
+        List<Record> usuarios = dataUsuarios.list();
+        for(Record usuario : usuarios){
+            childrenData.put("name", usuario.get(0).get("name").asString());
+            childrenData.put("followers", usuario.get(0).get("followers").asInt());
+            childrenData.put("value", usuario.get(1).get("weight").asInt());
+            childrens.add(childrenData);
+            childrenData = new HashMap<>();
+        }
+        List<Object> linkWith = new ArrayList<>();
+        data.put("linkWith", linkWith);
+        data.put("children", childrens);
+        resultData.add(data);
+        return resultData;
+    }
+
     public void crearNodosArtista(){
         List<Artist> artists = artistRepository.findAll();
         for(Artist artist : artists){
