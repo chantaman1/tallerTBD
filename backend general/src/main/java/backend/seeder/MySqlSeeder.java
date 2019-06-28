@@ -36,6 +36,13 @@ public class MySqlSeeder{
 	@Autowired
 	private Neo4J neo4J;
 
+	public void test(){
+		neo4J.connect();
+		neo4J.obtenerUsuarioArtista("Daddy Yankee");
+		neo4J.obtenerUsuarioGenero("rock");
+		neo4J.disconnect();
+	}
+
 	public void createUserNodes(){
 		neo4J.connect();
 		neo4J.crearNodosUsuario();

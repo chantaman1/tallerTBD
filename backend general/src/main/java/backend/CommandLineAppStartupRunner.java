@@ -20,6 +20,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
         //seeder.createRelationsUserGenre();
 		//seeder.crearRelacionUserArtist();
 		//seeder.crearRelacionUserGenre();
+		seeder.test();
     }
 
 }

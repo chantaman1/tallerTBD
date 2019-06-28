@@ -79,6 +79,30 @@ public class Neo4J {
         System.out.println("Se creo nodo artista");
     }
 
+    public void obtenerUsuarioArtista(String artista){
+        StatementResult result = this.session.run("match (n:Usuario)-[r:TwitteaArtista]-(v:Artista) WHERE v.name='"+artista+"' RETURN n,v,r ORDER BY r.weight DESC LIMIT 3");
+        List<Record> records = result.list();
+        for(Record record : records){
+            String user = record.get(0).get("name").asString();
+            int followers = record.get(0).get("followers").asInt();
+            String artist = record.get(1).get("name").asString();
+            int weight = record.get(2).get("weight").asInt();
+            System.out.println("Usuario: " + user + "\r\nFollowers: " + followers + "\r\nArtista: " + artist + "\r\nOcurrencias: " + weight + "\r\n");
+        }
+    }
+
+    public void obtenerUsuarioGenero(String genero){
+        StatementResult result = this.session.run("match (n:Usuario)-[r:TwitteaGenero]-(v:Genero) WHERE v.name='"+genero+"' RETURN n,v,r ORDER BY r.weight DESC LIMIT 3");
+        List<Record> records = result.list();
+        for(Record record : records){
+            String user = record.get(0).get("name").asString();
+            int followers = record.get(0).get("followers").asInt();
+            String genre = record.get(1).get("name").asString();
+            int weight = record.get(2).get("weight").asInt();
+            System.out.println("Usuario: " + user + "\r\nFollowers: " + followers + "\r\nArtista: " + genre + "\r\nOcurrencias: " + weight + "\r\n");
+        }
+    }
+
     public void crearNodosArtista(){
         List<Artist> artists = artistRepository.findAll();
         for(Artist artist : artists){
