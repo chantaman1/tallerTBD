@@ -42,6 +42,29 @@ public class MySqlSeeder{
 		//neo4J.obtenerUsuarioGenero();
 		neo4J.disconnect();
 	}
+	
+	public void testeoQueryCLI(){
+		neo4J.connect();
+
+		System.out.println("------------------QUERY BÚSQUEDA------------------");
+		Map<String, Integer> resultados = new HashMap<String, Integer>();
+		List<Record> records = neo4J.testeoQuery2().list();
+		for (Record r : records){
+			Integer j = resultados.get(r.get(0).get("name").asString());
+			resultados.put(r.get(0).get("name").asString(), (j == null) ? 1 : j+1);
+		}
+
+        for (Map.Entry<String, Integer> val : resultados.entrySet()) { 
+            System.out.println("Element " + val.getKey() + " "
+                               + "occurs"
+                               + ": " + val.getValue() + " times"); 
+        }
+
+        System.out.println("Cantidad que aparece el rock: " + neo4J.countGenreWeigth("rock").list().get(0).get("COUNT(r)"));
+        System.out.println("Cantidad que aparece el pop: " + neo4J.countGenreWeigth("pop").list().get(0).get("COUNT(r)"));
+
+		neo4J.disconnect();
+	}
 
 	public void createUserNodes(){
 		neo4J.connect();

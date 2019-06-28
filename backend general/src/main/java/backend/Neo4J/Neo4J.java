@@ -179,6 +179,10 @@ public class Neo4J {
        return this.session.run("match (n:Usuario) RETURN n LIMIT 400");
     }
 
+    public StatementResult countGenreInstances(String genre){
+        return this.session.run("MATCH (v:Genero)<-[r:TwitteaGenero]-(u:Usuario) WHERE v.name='" + genre + "' RETURN COUNT(r)");
+    }
+
     public boolean existeUsuario(String usuario){
         StatementResult res = this.session.run("match (n:Usuario) WHERE n.name='"+usuario+"' RETURN n");
         List<Record> listaUsuarios = res.list();
