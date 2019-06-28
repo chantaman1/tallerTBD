@@ -56,7 +56,7 @@ public class Neo4J {
                 .append("seguidores", new BasicDBObject("$avg", "$followersCount")));
         System.out.println("Creating group of items.");
         DBObject sort = new BasicDBObject("$sort", new BasicDBObject("seguidores", -1));
-        DBObject limit= new BasicDBObject("$limit",400);
+        DBObject limit= new BasicDBObject("$limit",300);
         System.out.println("Sorting items.");
         AggregationOutput output = col.aggregate(group,sort,limit);
         int cantidad =output.hashCode();
@@ -103,7 +103,7 @@ public class Neo4J {
     }
 
     public void crearNodoUsuario(String usuario, Long seguidores){
-        session.run("create (a:Usuario {name:'"+usuario+"', followers:"+seguidores+"})");
+        this.session.run("create (a:Usuario {name:'"+usuario+"', followers:"+seguidores+"})");
         System.out.println("Se creo nodo usuario");
     }
 

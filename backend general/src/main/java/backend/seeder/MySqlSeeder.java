@@ -61,7 +61,7 @@ public class MySqlSeeder{
 					neo4J.crearRelacionUsuarioArtista(artista.getName(), user.get("userName").toString(), totalHits);
 				}
 				else{
-					neo4J.crearNodoUsuario(user.get("userName").toString(), Long.parseLong(user.get("followersCount").toString()));
+					neo4J.crearNodoUsuario(user.get("userName").toString(), Long.parseLong(user.get("followers").toString()));
 					int totalHits = e.getByGenreAndUser(artista.getName(), user.get("userName").toString());
 					neo4J.crearRelacionUsuarioArtista(artista.getName(), user.get("userName").toString(), totalHits);
 				}
@@ -83,7 +83,7 @@ public class MySqlSeeder{
 					neo4J.crearRelacionUsuarioGenero(genero.getGenre(), user.get("userName").toString(), totalHits);
 				}
 				else{
-					neo4J.crearNodoUsuario(user.get("userName").toString(), Long.parseLong(user.get("followersCount").toString()));
+					neo4J.crearNodoUsuario(user.get("userName").toString(), Long.parseLong(user.get("followers").toString()));
 					int totalHits = e.getByGenreAndUser(genero.getGenre(), user.get("userName").toString());
 					neo4J.crearRelacionUsuarioGenero(genero.getGenre(), user.get("userName").toString(), totalHits);
 				}
