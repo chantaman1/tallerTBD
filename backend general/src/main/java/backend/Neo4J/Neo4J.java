@@ -109,12 +109,12 @@ public class Neo4J {
 
     public void crearRelacionUsuarioGenero(String genre, String usuario, int peso){
         this.session.run("MATCH (u:Usuario),(v:Genero) WHERE u.name='"+usuario+"' AND v.name='"+genre+"'"
-                + " CREATE (u)-[r:TwitteaGenero {weight:'"+peso+"'}]->(v)");
+                + " CREATE (u)-[r:TwitteaGenero {weight:"+peso+"}]->(v)");
     }
 
     public void crearRelacionUsuarioArtista(String artist, String usuario, int peso){
         this.session.run("MATCH (u:Usuario),(v:Artista) WHERE u.name='"+usuario+"' AND v.name='"+artist+"'"
-                + " CREATE (u)-[r:TwitteaArtista {weight:'"+peso+"'}]->(v)");
+                + " CREATE (u)-[r:TwitteaArtista {weight:"+peso+"}]->(v)");
     }
 
     public StatementResult obtenerUsuarios(){
