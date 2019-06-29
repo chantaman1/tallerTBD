@@ -60,8 +60,45 @@ public class Artist implements Serializable {
         this.wordId = wordId;
     }
 
-    public Integer getGenreId() {
-        return this.genreId;
+    public Integer getGenreId(){
+      return this.genreId;
+    }
+
+    public String getGenre() {
+      if(genreId == 1){
+        return "rock";
+      }
+      if(genreId == 2){
+        return "pop";
+      }
+      if(genreId == 3){
+        return "hip-hop";
+      }
+      if(genreId == 4){
+        return "electronica";
+      }
+      else if(genreId == 5){
+        return "reggaeton";
+      }
+      else if(genreId == 6){
+        return "cumbia";
+      }
+      else if(genreId == 7){
+        return "trap";
+      }
+      else if(genreId == 8){
+        return "metal";
+      }
+      else if(genreId == 9){
+        return "dubstep";
+      }
+      else if(genreId == 10){
+        return "techno";
+      }
+      else{
+        return "rap";
+      }
+        //return this.genreId;
     }
 
     public void setGenreId(Integer genreId) {
