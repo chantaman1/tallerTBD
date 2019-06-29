@@ -103,6 +103,9 @@ public class Neo4J {
                 childrenData = new HashMap<>();
             }
             List<Object> linkWith = new ArrayList<>();
+            if(artista.getName().equals("Slayer") || artista.getName().equals("Queen")){
+                linkWith.add("xataka");
+            }
             data.put("linkWith", linkWith);
             data.put("children", childrens);
             resultData.add(data);
@@ -253,18 +256,70 @@ public class Neo4J {
         }
     }
 
-    private void linkUsersArtist(){
-        List<List<String>> result = new ArrayList<>();
-        List<String> list = new ArrayList<>();
+    public void linkUsersArtist(){
+        List<HashMap<String, List<String>>> result = new ArrayList<>();
+        List<String> artistName = new ArrayList<>();
+        List<String> singleName = new ArrayList<>();
+        List<String> usersName = new ArrayList<>();
+        HashMap<String, List<String>> map = new HashMap<>();
         List<Artist> artists = artistRepository.findAll();
         for(Artist artist : artists){
-            StatementResult data = this.session.run("match (n:Usuario)-[r:TwitteaGenero]-(v:Genero) WHERE v.name='"+artist.getName()+"' RETURN n ORDER BY r.weight DESC LIMIT 3");
-            list.add(artist.getName());
+            StatementResult data = this.session.run("match (n:Usuario)-[r:TwitteaArtista]-(v:Artista) WHERE v.name='"+artist.getName()+"' RETURN n ORDER BY r.weight DESC LIMIT 3");
             for(Record record : data.list()){
-                list.add(record.get(0).get("name").asString());
+                StatementResult usersRelationship = this.session.run("match (n:Usuario)-[r:TwitteaArtista]-(v:Artista) WHERE n.name='"+ record.get(0).get("name").asString() +"' RETURN v");
+                List<Record> usersRecord = usersRelationship.list();
+                if(usersName.indexOf(record.get(0).get("name").asString()) == -1){
+                    if(usersRecord.size() > 1){
+                        usersName.add(record.get(0).get("name").asString());
+                        singleName.add(record.get(0).get("name").asString());
+                        for(Record artista : usersRecord){
+                            artistName.add(artista.get(0).get("name").asString());
+                        }
+                    }
+                }
+                map.put("username", singleName);
+                map.put("artists", artistName);
+                artistName = new ArrayList<>();
+                singleName = new ArrayList<>();
+                result.add(map);
             }
-            result.add(list);
-            list = new ArrayList<>();
+        }
+        for(HashMap<String, List<String>> dato : result){
+            System.out.println("Usuario:" + dato.get("username").get(0) + " posee " + dato.get("artists").size() + "artistas.");
+
+        }
+    }
+
+    public void linkUsersGenre() {
+        List<HashMap<String, List<String>>> result = new ArrayList<>();
+        List<String> artistName = new ArrayList<>();
+        List<String> singleName = new ArrayList<>();
+        List<String> usersName = new ArrayList<>();
+        HashMap<String, List<String>> map = new HashMap<>();
+        List<Genre> artists = genreRepository.findAll();
+        for (Genre artist : artists) {
+            StatementResult data = this.session.run("match (n:Usuario)-[r:TwitteaGenero]-(v:Genero) WHERE v.name='" + artist.getGenre() + "' RETURN n ORDER BY r.weight DESC LIMIT 3");
+            for (Record record : data.list()) {
+                StatementResult usersRelationship = this.session.run("match (n:Usuario)-[r:TwitteaGenero]-(v:Genero) WHERE n.name='" + record.get(0).get("name").asString() + "' RETURN v");
+                List<Record> usersRecord = usersRelationship.list();
+                if (usersName.indexOf(record.get(0).get("name").asString()) == -1) {
+                    if (usersRecord.size() > 1) {
+                        usersName.add(record.get(0).get("name").asString());
+                        singleName.add(record.get(0).get("name").asString());
+                        for (Record artista : usersRecord) {
+                            artistName.add(artista.get(0).get("name").asString());
+                        }
+                    }
+                }
+                map.put("username", singleName);
+                map.put("artists", artistName);
+                artistName = new ArrayList<>();
+                singleName = new ArrayList<>();
+                result.add(map);
+            }
+        }
+        for (HashMap<String, List<String>> dato : result) {
+            //System.out.println("Usuario:" + dato.get("username").get(0) + " posee " + dato.get("artists").size() + "generos.");
         }
     }
 
