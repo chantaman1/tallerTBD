@@ -18,24 +18,36 @@ public class Neo4jService{
     @GetMapping("/artistaPopular")
     @ResponseBody
     public List<HashMap<String, Object>> getArtistaPopular(){
-      return neo.obtenerUsuariosArtistaPopular();
+        neo.connect();
+        List<HashMap<String, Object>> result = neo.obtenerUsuariosArtistaPopular();
+        neo.disconnect();
+        return result;
     }
 
     @GetMapping("/generoPopular")
     @ResponseBody
     public List<HashMap<String, Object>> getGeneroPopular(){
-      return neo.obtenerUsuariosGeneroPopular();
+        neo.connect();
+        List<HashMap<String, Object>> result = neo.obtenerUsuariosGeneroPopular();
+        neo.disconnect();
+        return result;
     }
 
     @GetMapping("/usuarioGenero")
     @ResponseBody
     public List<HashMap<String, Object>> getUsuarioGenero(){
-      return neo.obtenerUsuarioGenero();
+        neo.connect();
+        List<HashMap<String, Object>> result = neo.obtenerUsuarioGenero();
+        neo.disconnect();
+        return result;
     }
 
     @GetMapping("/usuarioArtista")
     @ResponseBody
     public List<HashMap<String, Object>> getUsuarioArtista(){
-      return neo.obtenerUsuarioArtista();
+        neo.connect();
+        List<HashMap<String, Object>> result = neo.obtenerUsuarioArtista();
+        neo.disconnect();
+        return result;
     }
 }

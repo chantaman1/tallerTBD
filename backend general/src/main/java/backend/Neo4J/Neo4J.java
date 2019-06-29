@@ -12,6 +12,7 @@ import org.neo4j.driver.v1.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.swing.plaf.nimbus.State;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -249,6 +250,21 @@ public class Neo4J {
         }
         else{
             return false;
+        }
+    }
+
+    private void linkUsersArtist(){
+        List<List<String>> result = new ArrayList<>();
+        List<String> list = new ArrayList<>();
+        List<Artist> artists = artistRepository.findAll();
+        for(Artist artist : artists){
+            StatementResult data = this.session.run("match (n:Usuario)-[r:TwitteaGenero]-(v:Genero) WHERE v.name='"+artist.getName()+"' RETURN n ORDER BY r.weight DESC LIMIT 3");
+            list.add(artist.getName());
+            for(Record record : data.list()){
+                list.add(record.get(0).get("name").asString());
+            }
+            result.add(list);
+            list = new ArrayList<>();
         }
     }
 
