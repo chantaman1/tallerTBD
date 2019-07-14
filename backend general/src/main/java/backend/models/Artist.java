@@ -18,6 +18,8 @@ public class Artist implements Serializable {
     private String info;
     @Column(name = "genre_id", nullable = false)
     private Integer genreId;
+    @Column(name = "picture", nullable = false, length = 200)
+    private String picture;
 
 
 
@@ -25,12 +27,14 @@ public class Artist implements Serializable {
                   Integer wordId,
                   String  name,
                   String info,
-                  Integer genreId){
+                  Integer genreId,
+                  String picture){
         this.id = id;
         this.name = name;
         this.wordId = wordId;
         this.info = info;
         this.genreId = genreId;
+        this.picture = picture;
     }
 
     public Artist(){
@@ -111,6 +115,14 @@ public class Artist implements Serializable {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    public String getPicture() {
+        return this.picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
 }
