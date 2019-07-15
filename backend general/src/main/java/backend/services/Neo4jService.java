@@ -65,18 +65,10 @@ public class Neo4jService{
 
     @GetMapping("/artistasGenero")
     @ResponseBody
-    public List<HashMap<String, Object>> getArtistGenre(){
-        HashMap<String, Object> map = new HashMap<>();
-        List<HashMap<String, Object>> result = new ArrayList<>();
-        List<ArtistStatistic> data = artistStatisticRepository.findAll();
-        for(ArtistStatistic artist : data){
-            Artist artistData = artistRepository.findArtistById(artist.getArtistId());
-            map.put("artist", artistData.getName());
-            map.put("genre", artistData.getGenre());
-            map.put("total", artist.getPositives() + artist.getNegatives());
-            result.add(map);
-            map = new HashMap<>();
-        }
+    public List<HashMap<String, Object>> getArtistasGenero(){
+        neo.connect();
+        List<HashMap<String, Object>> result = neo.obtenerArtistasGenero();
+        neo.disconnect();
         return result;
     }
 }

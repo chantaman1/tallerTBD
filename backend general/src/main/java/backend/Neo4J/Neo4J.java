@@ -2,6 +2,7 @@ package backend.Neo4J;
 
 import backend.models.Artist;
 import backend.models.Genre;
+import backend.models.ArtistStatistic;
 import backend.repositories.ArtistRepository;
 import backend.repositories.ArtistStatisticRepository;
 import backend.repositories.GenreRepository;
@@ -196,6 +197,42 @@ public class Neo4J {
         data.put("linkWith", linkWith);
         data.put("children", childrens);
         resultData.add(data);
+        return resultData;
+    }
+
+    public List<HashMap<String, Object>> obtenerArtistasGenero(){
+        List<Genre> genres = genreRepository.findAll();
+        List<Artist> artistas = artistRepository.findAll();
+        List<HashMap<String, Object>> resultData = new ArrayList<>();
+        HashMap<String, Object> data = new HashMap<>();
+        List<HashMap<String, Object>> childrens = new ArrayList<>();
+        HashMap<String, Object> childrenData = new HashMap<>();
+        for(Genre genre : genres){
+            StatementResult result = this.session.run("match (n:Usuario)-[r:TwitteaGenero]-(v:Genero) WHERE v.name='"+genre.getGenre()+"' RETURN n,v,r ORDER BY r.weight DESC LIMIT 3");
+            //StatementResult totalArtista = this.session.run("match (n:Usuario)-[r:TwitteaArtista]-(v:Artista) WHERE v.name='"+artistas.getName()+"' RETURN count(r.weight)");
+            //String artista = record.get(0).get("name").asString();
+            StatementResult totalGenero = this.session.run("match (n:Usuario)-[r:TwitteaGenero]-(v:Genero) WHERE v.name='"+genre.getGenre()+"' RETURN count(r.weight)");
+            //int totalA = totalArtista.single().get(0).asInt();
+            int totalG = totalGenero.single().get(0).asInt();
+            data.put("genre", genre.getGenre());
+            data.put("value", totalG);
+            List<ArtistStatistic> x = artistStatisticRepository.findAll();
+            for(ArtistStatistic artist : x){
+                Artist artistData = artistRepository.findArtistById(artist.getArtistId());
+                if(artistData.getGenre().equals(genre.getGenre())){
+                  childrenData.put("artist", artistData.getName());
+                  //childrenData.put("commentsA", totalA);
+                  childrens.add(childrenData);
+                  childrenData = new HashMap<>();
+                }
+            }
+            List<Object> linkWith = new ArrayList<>();
+            data.put("linkWith", linkWith);
+            data.put("children", childrens);
+            resultData.add(data);
+            childrens = new ArrayList<>();
+            data = new HashMap<>();
+        }
         return resultData;
     }
 
