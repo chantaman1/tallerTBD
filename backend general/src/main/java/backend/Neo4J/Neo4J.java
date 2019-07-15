@@ -214,13 +214,13 @@ public class Neo4J {
             StatementResult totalGenero = this.session.run("match (n:Usuario)-[r:TwitteaGenero]-(v:Genero) WHERE v.name='"+genre.getGenre()+"' RETURN count(r.weight)");
             //int totalA = totalArtista.single().get(0).asInt();
             int totalG = totalGenero.single().get(0).asInt();
-            data.put("genre", genre.getGenre());
+            data.put("name", genre.getGenre());
             data.put("value", totalG);
             List<ArtistStatistic> x = artistStatisticRepository.findAll();
             for(ArtistStatistic artist : x){
                 Artist artistData = artistRepository.findArtistById(artist.getArtistId());
                 if(artistData.getGenre().equals(genre.getGenre())){
-                  childrenData.put("artist", artistData.getName());
+                  childrenData.put("name", artistData.getName());
                   //childrenData.put("commentsA", totalA);
                   childrens.add(childrenData);
                   childrenData = new HashMap<>();
